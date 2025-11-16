@@ -45,6 +45,7 @@ export default function AddAppointmentModal({ onClose, appointment }: AddAppoint
   const [sharedWith, setSharedWith] = useState<string[]>([]);
   const [userSearchQuery, setUserSearchQuery] = useState('');
   const [selectedCalendar, setSelectedCalendar] = useState('1');
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const mockCalendars = [
     { id: '1', name: 'Bienvisport', color: 'blue' },
@@ -90,7 +91,10 @@ export default function AddAppointmentModal({ onClose, appointment }: AddAppoint
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onClose();
+    setShowConfirmation(true);
+    setTimeout(() => {
+      onClose();
+    }, 2500);
   };
 
   return (
@@ -376,6 +380,14 @@ export default function AddAppointmentModal({ onClose, appointment }: AddAppoint
                 placeholder="Informations complémentaires..."
               />
             </div>
+
+            {showConfirmation && (
+              <div className="bg-green-50 border border-green-200 rounded-2xl p-4 animate-scale-in">
+                <p className="text-sm text-green-800 font-light text-center">
+                  Un e-mail de confirmation sera envoyé au lead pour l'informer de ce rendez-vous.
+                </p>
+              </div>
+            )}
 
             <div className="flex gap-3 pt-4">
               <button

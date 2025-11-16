@@ -433,7 +433,7 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
               </div>
               <div
                 className="text-center p-4 bg-gradient-to-br from-violet-50 to-violet-100/30 rounded-xl cursor-pointer hover:shadow-md transition-all"
-                onClick={() => onNavigateToLeads?.('Rdv pris')}
+                onClick={() => onNavigateToLeads?.('RDV pris')}
               >
                 <p className="text-3xl font-light text-gray-900">{convertedLeads}</p>
                 <p className="text-sm text-gray-600 font-light mt-1">Convertis</p>
