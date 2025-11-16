@@ -81,6 +81,7 @@ interface DashboardProps {
   onNotificationClick: () => void;
   notificationCount: number;
   onNavigateToClients?: (showPending: boolean) => void;
+  onNavigateToLeads?: (filter: string | null) => void;
 }
 
 interface Memo {
@@ -100,7 +101,7 @@ const mockMemos: Memo[] = [
   { id: '5', title: 'Formation nouveaux produits', date: '28 Oct', time: '14:00', user: 'Équipe', color: 'amber' },
 ];
 
-export default function Dashboard({ onNotificationClick, notificationCount, onNavigateToClients }: DashboardProps) {
+export default function Dashboard({ onNotificationClick, notificationCount, onNavigateToClients, onNavigateToLeads }: DashboardProps) {
   const [showMemosModal, setShowMemosModal] = useState(false);
   const [showCallbackModal, setShowCallbackModal] = useState(false);
   const [showEditContractModal, setShowEditContractModal] = useState(false);
@@ -416,21 +417,30 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
           <div className="glass-card p-6 floating-shadow">
             <h3 className="text-lg font-light text-gray-900 mb-6">Statistiques des Leads</h3>
             <div className="grid grid-cols-2 gap-4">
-              <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100/30 rounded-xl">
+              <div
+                className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100/30 rounded-xl cursor-pointer hover:shadow-md transition-all"
+                onClick={() => onNavigateToLeads?.(null)}
+              >
                 <p className="text-3xl font-light text-gray-900">{totalLeads}</p>
                 <p className="text-sm text-gray-600 font-light mt-1">Total leads</p>
               </div>
-              <div className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100/30 rounded-xl">
+              <div
+                className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100/30 rounded-xl cursor-pointer hover:shadow-md transition-all"
+                onClick={() => onNavigateToLeads?.('NRP')}
+              >
                 <p className="text-3xl font-light text-gray-900">{contactedLeads}</p>
                 <p className="text-sm text-gray-600 font-light mt-1">Contactés</p>
               </div>
-              <div className="text-center p-4 bg-gradient-to-br from-violet-50 to-violet-100/30 rounded-xl">
+              <div
+                className="text-center p-4 bg-gradient-to-br from-violet-50 to-violet-100/30 rounded-xl cursor-pointer hover:shadow-md transition-all"
+                onClick={() => onNavigateToLeads?.('Rdv fixés')}
+              >
                 <p className="text-3xl font-light text-gray-900">{convertedLeads}</p>
                 <p className="text-sm text-gray-600 font-light mt-1">Convertis</p>
               </div>
               <div
                 className="text-center p-4 bg-gradient-to-br from-amber-50 to-amber-100/30 rounded-xl cursor-pointer hover:shadow-md transition-all"
-                onClick={() => setShowCallbackModal(true)}
+                onClick={() => onNavigateToLeads?.('À rappeler')}
               >
                 <p className="text-3xl font-light text-gray-900">
                   {mockLeads.filter(l => l.status === 'À rappeler' || l.status === 'NRP').length}

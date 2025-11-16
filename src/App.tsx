@@ -24,6 +24,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showPendingInClient, setShowPendingInClient] = useState(false);
+  const [leadsFilter, setLeadsFilter] = useState<string | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -56,9 +57,12 @@ function App() {
         return <Dashboard {...pageProps} onNavigateToClients={(showPending) => {
           setShowPendingInClient(showPending);
           setCurrentPage('client');
+        }} onNavigateToLeads={(filter) => {
+          setLeadsFilter(filter);
+          setCurrentPage('leads');
         }} />;
       case 'leads':
-        return <Leads {...pageProps} />;
+        return <Leads {...pageProps} initialFilter={leadsFilter} />;
       case 'calendrier':
         return <Calendrier {...pageProps} />;
       case 'client':

@@ -571,12 +571,13 @@ function LeadCard({ lead, onUpdate, showOwner }: { lead: Lead; onUpdate: (leadId
 interface LeadsProps {
   onNotificationClick: () => void;
   notificationCount: number;
+  initialFilter?: string | null;
 }
 
-export default function Leads({ onNotificationClick, notificationCount }: LeadsProps) {
+export default function Leads({ onNotificationClick, notificationCount, initialFilter }: LeadsProps) {
   const [viewMode, setViewMode] = useState<'cards' | 'table'>('table');
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState<string>('Tous les statuts');
+  const [selectedStatus, setSelectedStatus] = useState<string>(initialFilter || 'Tous les statuts');
   const [ageMin, setAgeMin] = useState('');
   const [ageMax, setAgeMax] = useState('');
   const [region, setRegion] = useState('Toute la France');
@@ -585,7 +586,7 @@ export default function Leads({ onNotificationClick, notificationCount }: LeadsP
   const [nrpMax, setNrpMax] = useState('');
   const [filterName, setFilterName] = useState('');
   const [filterProduct, setFilterProduct] = useState('');
-  const [filterStatus, setFilterStatus] = useState('');
+  const [filterStatus, setFilterStatus] = useState(initialFilter || '');
   const [editingCell, setEditingCell] = useState<{ leadId: string; field: string } | null>(null);
   const [editValue, setEditValue] = useState('');
   const [showStatusMenu, setShowStatusMenu] = useState<string | null>(null);
