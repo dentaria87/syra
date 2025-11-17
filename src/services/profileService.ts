@@ -100,7 +100,7 @@ export function getProfilePermissions(profileType: string): ProfilePermissions {
         canViewSharedAppointments: true,
         canManagePartners: true,
         canEditEmailTemplates: true,
-        canManageOrganizationSettings: true,
+        canManageOrganizationSettings: false,
         canEditAdvisorPdf: true,
       };
     case 'Signataire':
