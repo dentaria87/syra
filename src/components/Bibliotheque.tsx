@@ -1,20 +1,22 @@
 import { useState, useEffect } from 'react';
 import { Bell, Search, FileText, Eye, Download, Trash2, Plus, FolderOpen } from 'lucide-react';
-import { LibraryDocument, DocumentCategory, UploadCategory } from '../types';
+import { LibraryDocument, DocumentCategory, UploadCategory, ContractSubCategory, LibraryMainCategory, MockLibraryDocument } from '../types';
 import { getAllDocuments, searchDocuments, deleteDocument, getDocumentDownloadUrl, formatFileSize } from '../services/libraryService';
 import { getActiveProfile, getProfilePermissions } from '../services/profileService';
 import UploadDocumentModal from './UploadDocumentModal';
+import { mockLibraryDocuments } from '../data/mockLibraryDocuments';
 
 interface BibliothequeProps {
   onNotificationClick: () => void;
   notificationCount: number;
-  initialCategory?: DocumentCategory;
+  initialCategory?: LibraryMainCategory;
 }
 
 export default function Bibliotheque({ onNotificationClick, notificationCount, initialCategory }: BibliothequeProps) {
-  const [activeTab, setActiveTab] = useState<DocumentCategory>(initialCategory || 'Contrats');
+  const [mainCategory, setMainCategory] = useState<LibraryMainCategory>(initialCategory || 'Contrats');
+  const [activeSubTab, setActiveSubTab] = useState<ContractSubCategory>('PER');
   const [documents, setDocuments] = useState<LibraryDocument[]>([]);
-  const [filteredDocuments, setFilteredDocuments] = useState<LibraryDocument[]>([]);
+  const [filteredDocuments, setFilteredDocuments] = useState<(LibraryDocument | MockLibraryDocument)[]>([]);
   const [allDocuments, setAllDocuments] = useState<LibraryDocument[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
@@ -23,25 +25,47 @@ export default function Bibliotheque({ onNotificationClick, notificationCount, i
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
   const [uploadCategory, setUploadCategory] = useState<UploadCategory>('Contrats');
+  const [uploadSubCategory, setUploadSubCategory] = useState<ContractSubCategory>('PER');
 
   useEffect(() => {
     checkPermissionsAndLoad();
   }, []);
 
   useEffect(() => {
-    loadDocuments();
-  }, [activeTab]);
+    const params = new URLSearchParams(window.location.search);
+    const categoryParam = params.get('category') as LibraryMainCategory;
+    if (categoryParam && (categoryParam === 'Contrats' || categoryParam === 'Bienviyance')) {
+      setMainCategory(categoryParam);
+      setUploadCategory(categoryParam);
+    }
+  }, []);
 
   useEffect(() => {
+    loadDocuments();
+  }, [mainCategory, activeSubTab]);
+
+  useEffect(() => {
+    let docsToFilter: (LibraryDocument | MockLibraryDocument)[] = [];
+
+    if (mainCategory === 'Contrats') {
+      const realDocs = documents.filter(d => d.category === 'Contrats' && d.sub_category === activeSubTab);
+      const mockDocs = mockLibraryDocuments.filter(d => d.category === 'Contrats' && d.sub_category === activeSubTab);
+      docsToFilter = [...realDocs, ...mockDocs];
+    } else {
+      const realDocs = documents.filter(d => d.category === 'Bienviyance');
+      const mockDocs = mockLibraryDocuments.filter(d => d.category === 'Bienviyance');
+      docsToFilter = [...realDocs, ...mockDocs];
+    }
+
     if (searchTerm.trim()) {
-      const filtered = documents.filter(doc =>
+      const filtered = docsToFilter.filter(doc =>
         doc.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredDocuments(filtered);
     } else {
-      setFilteredDocuments(documents);
+      setFilteredDocuments(docsToFilter);
     }
-  }, [searchTerm, documents]);
+  }, [searchTerm, documents, mainCategory, activeSubTab]);
 
   const checkPermissionsAndLoad = async () => {
     try {
@@ -61,9 +85,7 @@ export default function Bibliotheque({ onNotificationClick, notificationCount, i
       setLoading(true);
       const allDocs = await getAllDocuments();
       setAllDocuments(allDocs);
-      const docs = allDocs.filter(d => d.category === activeTab);
-      setDocuments(docs);
-      setFilteredDocuments(docs);
+      setDocuments(allDocs);
     } catch (error) {
       console.error('Erreur lors du chargement des documents:', error);
     } finally {
@@ -112,17 +134,26 @@ export default function Bibliotheque({ onNotificationClick, notificationCount, i
     setShowUploadModal(false);
   };
 
-  const contratsCount = allDocuments.filter(d => d.category === 'Contrats').length;
-  const bienviyanceCount = allDocuments.filter(d => d.category === 'Bienviyance').length;
-  const prevoyanceCount = allDocuments.filter(d => d.category === 'Prévoyance').length;
+  const allContratsCount = [...allDocuments.filter(d => d.category === 'Contrats'), ...mockLibraryDocuments.filter(d => d.category === 'Contrats')].length;
+  const allBienviyanceCount = [...allDocuments.filter(d => d.category === 'Bienviyance'), ...mockLibraryDocuments.filter(d => d.category === 'Bienviyance')].length;
+
+  const perCount = [...allDocuments.filter(d => d.sub_category === 'PER'), ...mockLibraryDocuments.filter(d => d.sub_category === 'PER')].length;
+  const avCount = [...allDocuments.filter(d => d.sub_category === 'Assurance Vie'), ...mockLibraryDocuments.filter(d => d.sub_category === 'Assurance Vie')].length;
+  const prevoyanceCount = [...allDocuments.filter(d => d.sub_category === 'Prévoyance'), ...mockLibraryDocuments.filter(d => d.sub_category === 'Prévoyance')].length;
+
+  const isMockDocument = (doc: LibraryDocument | MockLibraryDocument): doc is MockLibraryDocument => {
+    return 'id' in doc && doc.id.startsWith('mock-');
+  };
 
   return (
     <div className="flex-1 overflow-auto">
       <header className="glass-card ml-20 mr-4 lg:mx-8 mt-4 md:mt-6 lg:mt-8 px-4 md:px-6 lg:px-8 py-4 md:py-5 flex items-center justify-between floating-shadow">
         <div>
-          <h1 className="text-xl md:text-2xl font-light text-gray-900">Bibliothèque</h1>
+          <h1 className="text-xl md:text-2xl font-light text-gray-900">
+            Bibliothèque - {mainCategory}
+          </h1>
           <p className="text-xs md:text-sm text-gray-500 font-light mt-1 hidden sm:block">
-            Documents et ressources pour {activeTab}
+            {mainCategory === 'Contrats' ? 'Documents contractuels et produits' : 'Documents internes Bienviyance'}
           </p>
         </div>
         <button
@@ -140,6 +171,41 @@ export default function Bibliotheque({ onNotificationClick, notificationCount, i
 
       <div className="px-4 md:px-6 lg:px-8 py-3 md:py-4 lg:py-5 max-w-[1800px] mx-auto">
         <div className="glass-card p-6 floating-shadow">
+          {mainCategory === 'Contrats' && (
+            <div className="flex items-center gap-2 mb-6 border-b border-gray-200 pb-4">
+              <button
+                onClick={() => setActiveSubTab('PER')}
+                className={`px-4 py-2 rounded-full text-sm font-light transition-all ${
+                  activeSubTab === 'PER'
+                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md'
+                    : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
+                }`}
+              >
+                PER ({perCount})
+              </button>
+              <button
+                onClick={() => setActiveSubTab('Assurance Vie')}
+                className={`px-4 py-2 rounded-full text-sm font-light transition-all ${
+                  activeSubTab === 'Assurance Vie'
+                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md'
+                    : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
+                }`}
+              >
+                Assurance Vie ({avCount})
+              </button>
+              <button
+                onClick={() => setActiveSubTab('Prévoyance')}
+                className={`px-4 py-2 rounded-full text-sm font-light transition-all ${
+                  activeSubTab === 'Prévoyance'
+                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md'
+                    : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
+                }`}
+              >
+                Prévoyance ({prevoyanceCount})
+              </button>
+            </div>
+          )}
+
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -153,16 +219,19 @@ export default function Bibliotheque({ onNotificationClick, notificationCount, i
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">
-              {canUpload && (
+              {canUpload ? (
                 <div className="flex items-center gap-2">
-                  <select
-                    value={uploadCategory}
-                    onChange={(e) => setUploadCategory(e.target.value as UploadCategory)}
-                    className="px-3 py-2 bg-white border border-gray-200 rounded-full text-sm font-light focus:outline-none focus:ring-2 focus:ring-blue-400/50"
-                  >
-                    <option value="Contrats">Contrats</option>
-                    <option value="Bienviyance">Bienviyance</option>
-                  </select>
+                  {mainCategory === 'Contrats' && (
+                    <select
+                      value={uploadSubCategory}
+                      onChange={(e) => setUploadSubCategory(e.target.value as ContractSubCategory)}
+                      className="px-3 py-2 bg-white border border-gray-200 rounded-full text-sm font-light focus:outline-none focus:ring-2 focus:ring-blue-400/50"
+                    >
+                      <option value="PER">PER</option>
+                      <option value="Assurance Vie">Assurance Vie</option>
+                      <option value="Prévoyance">Prévoyance</option>
+                    </select>
+                  )}
                   <button
                     onClick={() => setShowUploadModal(true)}
                     className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full text-sm font-light hover:from-blue-600 hover:to-blue-700 shadow-md transition-all hover:scale-105 flex items-center gap-2"
@@ -170,6 +239,10 @@ export default function Bibliotheque({ onNotificationClick, notificationCount, i
                     <Plus className="w-4 h-4" />
                     <span className="hidden sm:inline">Ajouter un document</span>
                   </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-200 rounded-full text-sm text-gray-500 font-light">
+                  <span>Droits insuffisants pour ajouter des documents</span>
                 </div>
               )}
             </div>
@@ -260,7 +333,7 @@ export default function Bibliotheque({ onNotificationClick, notificationCount, i
                     >
                       <Download className="w-4 h-4 text-green-600 mx-auto" />
                     </button>
-                    {canUpload && (
+                    {canUpload && !isMockDocument(doc) && (
                       <button
                         onClick={() => handleDelete(doc)}
                         className="flex-1 p-2 hover:bg-red-50 rounded-lg transition-colors"
@@ -282,6 +355,7 @@ export default function Bibliotheque({ onNotificationClick, notificationCount, i
           userId={currentUserId}
           organizationId="1"
           uploadCategory={uploadCategory}
+          uploadSubCategory={mainCategory === 'Contrats' ? uploadSubCategory : undefined}
           onClose={() => setShowUploadModal(false)}
           onSuccess={handleUploadSuccess}
         />

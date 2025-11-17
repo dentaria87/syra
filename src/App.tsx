@@ -17,7 +17,7 @@ import NotificationsSidebar from './components/NotificationsSidebar';
 import Login from './components/Login';
 import { supabase } from './lib/supabase';
 import { Bell } from 'lucide-react';
-import { DocumentCategory } from './types';
+import { LibraryMainCategory } from './types';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
@@ -28,6 +28,7 @@ function App() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showPendingInClient, setShowPendingInClient] = useState(false);
   const [leadsFilter, setLeadsFilter] = useState<string | null>(null);
+  const [libraryCategory, setLibraryCategory] = useState<LibraryMainCategory>('Contrats');
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -87,7 +88,7 @@ function App() {
       case 'parametres':
         return <Parametres {...pageProps} />;
       case 'bibliotheque':
-        return <Bibliotheque {...pageProps} />;
+        return <Bibliotheque {...pageProps} initialCategory={libraryCategory} />;
       default:
         return <Dashboard {...pageProps} />;
     }
@@ -111,8 +112,20 @@ function App() {
         currentPage={currentPage}
         onNavigate={(page) => {
           setIsTransitioning(true);
-          setTimeout(() => {
+
+          if (page.includes('?category=')) {
+            const [basePage, query] = page.split('?');
+            const params = new URLSearchParams(query);
+            const category = params.get('category') as LibraryMainCategory;
+            if (category) {
+              setLibraryCategory(category);
+            }
+            setCurrentPage(basePage);
+          } else {
             setCurrentPage(page);
+          }
+
+          setTimeout(() => {
             setIsTransitioning(false);
           }, 150);
         }}

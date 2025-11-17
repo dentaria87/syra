@@ -119,6 +119,8 @@ export interface PredefinedMessage {
   updated_at: string;
 }
 
+export type LibraryMainCategory = 'Contrats' | 'Bienviyance';
+export type ContractSubCategory = 'PER' | 'Assurance Vie' | 'Prévoyance';
 export type DocumentCategory = 'Contrats' | 'Bienviyance' | 'Prévoyance';
 export type UploadCategory = 'Contrats' | 'Bienviyance';
 
@@ -130,10 +132,22 @@ export interface LibraryDocument {
   file_name: string;
   file_size: number;
   category: DocumentCategory;
+  sub_category?: ContractSubCategory;
   uploaded_by: string;
   uploaded_at: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface MockLibraryDocument {
+  id: string;
+  title: string;
+  file_name: string;
+  file_size: number;
+  category: DocumentCategory;
+  sub_category?: ContractSubCategory;
+  uploaded_at: string;
+  uploaded_by: string;
 }
 
 export type MemoStatus = 'pending' | 'completed';

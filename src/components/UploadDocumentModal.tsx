@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { X, Upload, FileText, Check, AlertCircle } from 'lucide-react';
-import { DocumentCategory, UploadCategory } from '../types';
+import { DocumentCategory, UploadCategory, ContractSubCategory } from '../types';
 import { uploadDocument } from '../services/libraryService';
 
 interface UploadDocumentModalProps {
   userId: string;
   organizationId: string;
   uploadCategory: UploadCategory;
+  uploadSubCategory?: ContractSubCategory;
   onClose: () => void;
   onSuccess: () => void;
 }
@@ -15,6 +16,7 @@ export default function UploadDocumentModal({
   userId,
   organizationId,
   uploadCategory,
+  uploadSubCategory,
   onClose,
   onSuccess,
 }: UploadDocumentModalProps) {
@@ -105,7 +107,7 @@ export default function UploadDocumentModal({
 
     try {
       const storageCategory = mapUploadToStorageCategory(uploadCategory);
-      await uploadDocument(file, title, storageCategory, userId, organizationId);
+      await uploadDocument(file, title, storageCategory, userId, organizationId, uploadSubCategory);
       clearInterval(progressInterval);
       setProgress(100);
       setSuccess(true);
@@ -147,9 +149,11 @@ export default function UploadDocumentModal({
             </label>
             <div className="px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-2xl text-sm text-blue-700 font-light">
               {uploadCategory}
+              {uploadSubCategory && ` - ${uploadSubCategory}`}
             </div>
             <p className="text-xs text-gray-500 mt-1 font-light">
               Sera classé dans : {mapUploadToStorageCategory(uploadCategory)}
+              {uploadSubCategory && ` / ${uploadSubCategory}`}
             </p>
           </div>
 

@@ -115,8 +115,8 @@ export default function Sidebar({ currentPage, onNavigate, onCollapseChange, onL
   ] : [];
 
   const libraryItems = shouldShowLibrary ? [
-    { id: 'bibliotheque', label: 'PER', icon: FileText, category: 'PER' },
-    { id: 'bibliotheque', label: 'Assurance Vie', icon: FileText, category: 'Assurance Vie' },
+    { id: 'bibliotheque', label: 'Contrats', icon: FileText, category: 'Contrats' },
+    { id: 'bibliotheque', label: 'Bienviyance', icon: BookOpen, category: 'Bienviyance' },
   ] : [];
 
   const managementItems = [
@@ -378,7 +378,10 @@ export default function Sidebar({ currentPage, onNavigate, onCollapseChange, onL
                   return (
                     <button
                       key={`${item.id}-${index}`}
-                      onClick={() => handleMobileNavigate(item.id)}
+                      onClick={() => {
+                        const nav = item.category ? `${item.id}?category=${item.category}` : item.id;
+                        handleMobileNavigate(nav);
+                      }}
                       className={`w-full flex items-center gap-3 px-4 py-3 text-sm rounded-2xl transition-all ${
                         isActive
                           ? 'bg-white/80 backdrop-blur-sm text-gray-900 shadow-md font-light'

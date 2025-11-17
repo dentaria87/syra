@@ -1,5 +1,5 @@
 import { supabase } from '../lib/supabase';
-import { LibraryDocument, DocumentCategory } from '../types';
+import { LibraryDocument, DocumentCategory, ContractSubCategory } from '../types';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_FILE_TYPE = 'application/pdf';
@@ -49,7 +49,8 @@ export async function uploadDocument(
   title: string,
   category: DocumentCategory,
   userId: string,
-  organizationId: string
+  organizationId: string,
+  subCategory?: ContractSubCategory
 ): Promise<LibraryDocument> {
   // Validation
   if (title.length < 3) {
@@ -91,6 +92,7 @@ export async function uploadDocument(
       file_name: file.name,
       file_size: file.size,
       category,
+      sub_category: subCategory,
       uploaded_by: userId,
     })
     .select()
