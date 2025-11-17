@@ -19,6 +19,7 @@ import {
   Building2,
   Send,
   RefreshCw,
+  Calculator,
 } from 'lucide-react';
 import ProfileSwitcher from './ProfileSwitcher';
 import { UserProfile, getActiveProfile, getProfilePermissions, getProfileBadgeColor } from '../services/profileService';
@@ -96,6 +97,7 @@ export default function Sidebar({ currentPage, onNavigate, onCollapseChange, onL
   const meetingItems = [
     { id: 'partenaires', label: 'Partenaires', icon: Handshake },
     { id: 'mise-en-relation', label: 'Mise en relation', icon: Send },
+    { id: 'simulation-per', label: 'Simulation PER', icon: Calculator },
     { id: 'devoir-conseil', label: 'Devoir de conseil', icon: ClipboardCheck },
   ];
 

@@ -8,6 +8,7 @@ import Listes from './components/Listes';
 import DevoirConseil from './components/DevoirConseil';
 import Partenaires from './components/Partenaires';
 import MiseEnRelation from './components/MiseEnRelation';
+import SimulationPER from './components/SimulationPER';
 import Performance from './components/Performance';
 import Parametres from './components/Parametres';
 import Client from './components/Client';
@@ -77,6 +78,8 @@ function App() {
         return <Partenaires {...pageProps} />;
       case 'mise-en-relation':
         return <MiseEnRelation {...pageProps} />;
+      case 'simulation-per':
+        return <SimulationPER {...pageProps} />;
       case 'performance':
         return <Performance {...pageProps} />;
       case 'parametres':
