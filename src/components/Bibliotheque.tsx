@@ -115,22 +115,33 @@ export default function Bibliotheque({ onNotificationClick, notificationCount, i
     <div className="flex-1 overflow-auto">
       <header className="glass-card ml-20 mr-4 lg:mx-8 mt-4 md:mt-6 lg:mt-8 px-4 md:px-6 lg:px-8 py-4 md:py-5 flex items-center justify-between floating-shadow">
         <div>
-          <h1 className="text-xl md:text-2xl font-light text-gray-900">Bibliothèque</h1>
+          <h1 className="text-xl md:text-2xl font-light text-gray-900">Bibliothèque - {activeTab}</h1>
           <p className="text-xs md:text-sm text-gray-500 font-light mt-1 hidden sm:block">
-            Gérez vos documents PER et Assurance Vie
+            {activeTab === 'PER' ? 'Documents PER' : 'Documents Assurance Vie'}
           </p>
         </div>
-        <button
-          onClick={onNotificationClick}
-          className="w-10 h-10 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-all hover:scale-105 shadow-sm relative flex-shrink-0"
-        >
-          <Bell className="w-5 h-5 text-gray-600" />
-          {notificationCount > 0 && (
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white text-xs font-light shadow-lg animate-pulse">
-              {notificationCount}
-            </span>
+        <div className="flex items-center gap-3">
+          {canUpload && (
+            <button
+              onClick={() => setShowUploadModal(true)}
+              className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full text-sm font-light hover:from-blue-600 hover:to-blue-700 shadow-md transition-all hover:scale-105 flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              <span className="hidden sm:inline">Ajouter un document</span>
+            </button>
           )}
-        </button>
+          <button
+            onClick={onNotificationClick}
+            className="w-10 h-10 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-all hover:scale-105 shadow-sm relative flex-shrink-0"
+          >
+            <Bell className="w-5 h-5 text-gray-600" />
+            {notificationCount > 0 && (
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white text-xs font-light shadow-lg animate-pulse">
+                {notificationCount}
+              </span>
+            )}
+          </button>
+        </div>
       </header>
 
       <div className="px-4 md:px-6 lg:px-8 py-3 md:py-4 lg:py-5 max-w-[1800px] mx-auto">
@@ -272,15 +283,6 @@ export default function Bibliotheque({ onNotificationClick, notificationCount, i
           )}
         </div>
       </div>
-
-      {canUpload && (
-        <button
-          onClick={() => setShowUploadModal(true)}
-          className="fixed bottom-8 right-8 w-14 h-14 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full shadow-2xl hover:from-blue-600 hover:to-blue-700 transition-all hover:scale-110 flex items-center justify-center z-30"
-        >
-          <Plus className="w-6 h-6" />
-        </button>
-      )}
 
       {showUploadModal && currentUserId && (
         <UploadDocumentModal
