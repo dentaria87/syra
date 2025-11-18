@@ -22,22 +22,25 @@ function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [showNotifications, setShowNotifications] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showPendingInClient, setShowPendingInClient] = useState(false);
   const [leadsFilter, setLeadsFilter] = useState<string | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsAuthenticated(!!session);
-      setIsLoading(false);
+      if (session) {
+        setIsAuthenticated(true);
+      }
     });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAuthenticated(!!session);
+      if (session) {
+        setIsAuthenticated(true);
+      }
     });
 
     return () => subscription.unsubscribe();
