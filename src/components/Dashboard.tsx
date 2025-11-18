@@ -654,8 +654,8 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
         </div>
 
         {showMemosModal && (
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-3xl w-full max-h-[80vh] overflow-y-auto border border-gray-200">
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="glass-card floating-shadow p-6 max-w-3xl w-full max-h-[80vh] overflow-y-auto">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-light text-gray-900">Mémos & Rappels</h3>
                 <div className="flex items-center gap-2">
@@ -679,50 +679,50 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
               </div>
 
               {showAddMemoForm && (
-                <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-blue-100/30 rounded-2xl border border-blue-200/50">
-                  <h4 className="text-sm font-medium text-gray-900 mb-4">Nouveau mémo</h4>
-                  <div className="space-y-3">
+                <div className="mb-6 p-5 glass-card floating-shadow bg-gradient-to-br from-blue-50/50 to-white/80">
+                  <h4 className="text-sm font-light text-gray-900 mb-4">Nouveau mémo</h4>
+                  <div className="space-y-4">
                     <div>
-                      <label className="block text-xs font-light text-gray-700 mb-1">Titre du mémo *</label>
+                      <label className="block text-xs font-light text-gray-700 mb-2">Titre du mémo *</label>
                       <input
                         type="text"
                         value={newMemoTitle}
                         onChange={(e) => setNewMemoTitle(e.target.value)}
                         placeholder="Titre du mémo"
-                        className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light"
+                        className="w-full px-4 py-2.5 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light transition-all"
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-light text-gray-700 mb-1">Date *</label>
+                        <label className="block text-xs font-light text-gray-700 mb-2">Date *</label>
                         <input
                           type="date"
                           value={newMemoDate}
                           onChange={(e) => setNewMemoDate(e.target.value)}
-                          className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light"
+                          className="w-full px-4 py-2.5 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light transition-all"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-light text-gray-700 mb-1">Heure *</label>
+                        <label className="block text-xs font-light text-gray-700 mb-2">Heure *</label>
                         <input
                           type="time"
                           value={newMemoTime}
                           onChange={(e) => setNewMemoTime(e.target.value)}
-                          className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light"
+                          className="w-full px-4 py-2.5 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light transition-all"
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs font-light text-gray-700 mb-1">Description</label>
+                      <label className="block text-xs font-light text-gray-700 mb-2">Description</label>
                       <textarea
                         value={newMemoDescription}
                         onChange={(e) => setNewMemoDescription(e.target.value)}
                         placeholder="Description du mémo (optionnel)"
                         rows={3}
-                        className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light resize-none"
+                        className="w-full px-4 py-2.5 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light resize-none transition-all"
                       />
                     </div>
-                    <div className="flex gap-2 justify-end">
+                    <div className="flex gap-3 justify-end pt-2">
                       <button
                         onClick={() => {
                           setShowAddMemoForm(false);
@@ -731,13 +731,13 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
                           setNewMemoTime('');
                           setNewMemoDescription('');
                         }}
-                        className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-full text-sm font-light hover:bg-gray-50 transition-all"
+                        className="px-5 py-2.5 bg-white/80 backdrop-blur-sm border border-gray-200/50 text-gray-700 rounded-full text-sm font-light hover:bg-white hover:shadow-md transition-all"
                       >
                         Annuler
                       </button>
                       <button
                         onClick={handleAddMemo}
-                        className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full text-sm font-light hover:from-blue-600 hover:to-blue-700 shadow-md transition-all"
+                        className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full text-sm font-light hover:from-blue-600 hover:to-blue-700 shadow-md hover:shadow-lg transition-all hover:scale-105"
                       >
                         Ajouter
                       </button>
@@ -748,8 +748,8 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
 
               {memos.length === 0 ? (
                 <div className="text-center py-12">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                    <StickyNote className="w-8 h-8 text-gray-400" />
+                  <div className="w-20 h-20 mx-auto mb-4 rounded-3xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center shadow-sm">
+                    <StickyNote className="w-9 h-9 text-gray-400" />
                   </div>
                   <p className="text-sm text-gray-600 font-light">Aucun mémo actif</p>
                   <p className="text-xs text-gray-500 font-light mt-1">Ajoutez un mémo pour commencer</p>
@@ -759,29 +759,29 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
                   {memos.map((memo) => (
                     <div
                       key={memo.id}
-                      className={`p-4 rounded-2xl border bg-white/80 backdrop-blur-sm shadow-sm transition-all duration-400 ${
+                      className={`glass-card glass-card-hover p-5 floating-shadow transition-all duration-400 ${
                         fadingMemos.has(memo.id) ? 'opacity-0' : 'opacity-100'
                       }`}
                     >
-                      <div className="flex items-start gap-3">
+                      <div className="flex items-start gap-4">
                         <input
                           type="checkbox"
                           checked={false}
                           onChange={(e) => handleCheckboxChange(memo, e.target.checked)}
                           disabled={processingMemos.has(memo.id)}
-                          className="mt-1 w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-400/50 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+                          className="mt-1 w-5 h-5 rounded-lg border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-400/50 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0 transition-all"
                         />
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-3">
+                          <div className="flex items-start justify-between gap-4">
                             <div className="flex-1">
-                              <p className="text-sm font-semibold text-gray-900">{memo.title}</p>
+                              <p className="text-sm font-medium text-gray-900">{memo.title}</p>
                               {memo.description && (
-                                <p className="text-sm text-gray-600 font-light mt-1.5">{memo.description}</p>
+                                <p className="text-sm text-gray-600 font-light mt-1.5 leading-relaxed">{memo.description}</p>
                               )}
                             </div>
                             <div className="text-right flex-shrink-0">
                               <p className="text-xs text-gray-500 font-light">{memo.date}</p>
-                              <p className="text-xs text-gray-500 font-light">{memo.time}</p>
+                              <p className="text-xs text-gray-500 font-light mt-0.5">{memo.time}</p>
                             </div>
                           </div>
                         </div>
