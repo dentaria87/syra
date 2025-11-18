@@ -85,7 +85,12 @@ export default function SimulationPER({ onNotificationClick, notificationCount }
 
   const calculateTaxCeiling = () => {
     if (professionalStatus === 'Salarié') {
-      const ceiling = Math.min(annualIncome * 0.1, 35194);
+      let ceiling;
+      if (annualIncome <= 43995) {
+        ceiling = 4399;
+      } else {
+        ceiling = annualIncome * 0.1;
+      }
       setTaxCeiling(Math.round(ceiling));
     } else {
       let ceiling;
@@ -94,7 +99,6 @@ export default function SimulationPER({ onNotificationClick, notificationCount }
       } else {
         ceiling = 48000 * 0.1 + (annualIncome - 48000) * 0.15;
       }
-      ceiling = Math.min(ceiling + 16097, 35194 + 16097);
       setTaxCeiling(Math.round(ceiling));
     }
   };
