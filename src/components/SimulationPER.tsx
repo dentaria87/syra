@@ -97,7 +97,7 @@ export default function SimulationPER({ onNotificationClick, notificationCount }
       if (annualIncome <= 48000) {
         ceiling = annualIncome * 0.1;
       } else {
-        ceiling = 48000 * 0.1 + (annualIncome - 48000) * 0.15;
+        ceiling = annualIncome * 0.15;
       }
       setTaxCeiling(Math.round(ceiling));
     }
