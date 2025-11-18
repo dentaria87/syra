@@ -220,16 +220,16 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
         { label: 'Lun', leads: 35, converted: 8 },
         { label: 'Mar', leads: 42, converted: 10 },
         { label: 'Mer', leads: 38, converted: 12 },
-        { label: 'Jeu', leads: 45, converted: 14 },
+        { label: 'Jeu', leads: 43, converted: 14 },
         { label: 'Ven', leads: 40, converted: 11 },
         { label: 'Sam', leads: 28, converted: 6 },
-        { label: 'Dim', leads: 20, converted: 4 },
+        { label: 'Dim', leads: 30, converted: 5 },
       ]
     : [
-        { label: 'S1', leads: 280, converted: 65 },
-        { label: 'S2', leads: 310, converted: 75 },
-        { label: 'S3', leads: 295, converted: 82 },
-        { label: 'S4', leads: 325, converted: 90 },
+        { label: 'S1', leads: 196, converted: 58 },
+        { label: 'S2', leads: 224, converted: 72 },
+        { label: 'S3', leads: 210, converted: 65 },
+        { label: 'S4', leads: 238, converted: 81 },
       ];
 
   const maxLeadsValueForScale = leadsChartPeriod === 'week' ? 50 : 350;
