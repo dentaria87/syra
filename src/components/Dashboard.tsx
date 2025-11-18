@@ -232,7 +232,7 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
         { label: 'S4', leads: 325, converted: 90 },
       ];
 
-  const maxLeadsValue = leadsChartPeriod === 'week' ? 50 : 350;
+  const maxLeadsValueForScale = leadsChartPeriod === 'week' ? 50 : 350;
 
   useEffect(() => {
     loadMemos();
@@ -621,7 +621,7 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
                         <span className="text-[10px] text-blue-600 font-medium mb-1">{data.leads}</span>
                         <div
                           className="w-full bg-gradient-to-t from-blue-400 to-blue-300 rounded-t-lg transition-all hover:from-blue-500 hover:to-blue-400 cursor-pointer shadow-sm"
-                          style={{ height: `${(data.leads / maxLeadsValue) * 100}%`, minHeight: '15px' }}
+                          style={{ height: `${(data.leads / maxLeadsValueForScale) * 100}%`, minHeight: '15px' }}
                           title={`${data.leads} leads`}
                         />
                       </div>
@@ -629,7 +629,7 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
                         <span className="text-[10px] text-violet-600 font-medium mb-1">{data.converted}</span>
                         <div
                           className="w-full bg-gradient-to-t from-violet-400 to-violet-300 rounded-t-lg transition-all hover:from-violet-500 hover:to-violet-400 cursor-pointer shadow-sm"
-                          style={{ height: `${(data.converted / maxLeadsValue) * 100}%`, minHeight: '10px' }}
+                          style={{ height: `${(data.converted / maxLeadsValueForScale) * 100}%`, minHeight: '10px' }}
                           title={`${data.converted} convertis`}
                         />
                       </div>
