@@ -437,32 +437,16 @@ export default function Sidebar({ currentPage, onNavigate, onCollapseChange, onL
       </nav>
 
       <div className="px-4 pb-4">
-        {isCollapsed ? (
-          <div className="space-y-2">
-            <ThemeToggle isCollapsed={isCollapsed} />
-            <button
-              onClick={onLogout}
-              className="w-full flex items-center justify-center px-4 py-3 text-sm rounded-2xl transition-all text-red-600 dark:text-red-400 hover:bg-red-50/50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300 font-light"
-              title="Déconnexion"
-            >
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-red-100 to-red-200 dark:from-red-900/40 dark:to-red-800/40 flex items-center justify-center">
-                <LogOut className="w-5 h-5 text-red-600 dark:text-red-400" />
-              </div>
-            </button>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <ThemeToggle isCollapsed={false} />
-            <button
-              onClick={onLogout}
-              className="flex items-center gap-2 px-4 py-3 text-sm rounded-2xl transition-all text-red-600 dark:text-red-400 hover:bg-red-50/50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300 font-light flex-shrink-0"
-              title="Déconnexion"
-            >
-              <LogOut className="w-5 h-5" />
-              <span>Déconnexion</span>
-            </button>
-          </div>
-        )}
+        <div className={`flex ${isCollapsed ? 'flex-col' : 'flex-row'} items-center gap-2`}>
+          <ThemeToggle isCollapsed={true} />
+          <button
+            onClick={onLogout}
+            className={`${isCollapsed ? 'w-full' : 'flex-1'} flex items-center justify-center px-4 py-3 text-sm rounded-2xl transition-all text-red-600 dark:text-red-400 hover:bg-red-50/50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300 font-light`}
+            title="Déconnexion"
+          >
+            <LogOut className="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
       {!isCollapsed && (
