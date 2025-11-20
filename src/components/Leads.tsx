@@ -387,7 +387,7 @@ function LeadCard({ lead, onUpdate, showOwner }: { lead: Lead; onUpdate: (leadId
       case 'NRP':
         return 'bg-gradient-to-r from-orange-100 to-orange-50 text-orange-700 border-orange-200/50';
       case 'Sans statut':
-        return 'bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 border-gray-200/50';
+        return 'bg-gradient-to-r from-red-100 to-red-50 text-red-700 border-red-200/50';
       case 'À rappeler':
         return 'bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 border-blue-200/50';
       case 'RDV pris':
@@ -449,7 +449,7 @@ function LeadCard({ lead, onUpdate, showOwner }: { lead: Lead; onUpdate: (leadId
             {showStatusMenu && (
               <div className="absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-200 p-2 z-10 min-w-max">
                 <button onClick={() => handleStatusChange('NRP')} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-orange-50 text-orange-700">NRP</button>
-                <button onClick={() => handleStatusChange('Sans statut')} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-gray-50 text-gray-700">Sans statut</button>
+                <button onClick={() => handleStatusChange('Sans statut')} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-red-50 text-red-700">Sans statut</button>
                 <button onClick={() => handleStatusChange('À rappeler')} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-blue-50 text-blue-700">À rappeler</button>
                 <button onClick={() => handleStatusChange('RDV pris')} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-purple-50 text-purple-700">RDV pris</button>
                 <button onClick={() => handleStatusChange('Signé')} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-green-50 text-green-700">Signé</button>
@@ -975,7 +975,7 @@ export default function Leads({ onNotificationClick, notificationCount, initialF
                             onClick={() => setShowStatusMenu(showStatusMenu === lead.id ? null : lead.id)}
                             className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-light border cursor-pointer w-fit ${
                               lead.status === 'NRP' ? 'bg-gradient-to-r from-orange-100 to-orange-50 text-orange-700 border-orange-200/50' :
-                              lead.status === 'Sans statut' ? 'bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 border-gray-200/50' :
+                              lead.status === 'Sans statut' ? 'bg-gradient-to-r from-red-100 to-red-50 text-red-700 border-red-200/50' :
                               lead.status === 'À rappeler' ? 'bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 border-blue-200/50' :
                               lead.status === 'RDV pris' ? 'bg-gradient-to-r from-purple-100 to-purple-50 text-purple-700 border-purple-200/50' :
                               lead.status === 'Signé' ? 'bg-gradient-to-r from-green-100 to-green-50 text-green-700 border-green-200/50' :
@@ -999,7 +999,7 @@ export default function Leads({ onNotificationClick, notificationCount, initialF
                               handleLeadUpdate(lead.id, updates);
                               setShowStatusMenu(null);
                             }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-orange-50 text-orange-700">NRP</button>
-                            <button onClick={() => { handleLeadUpdate(lead.id, { status: 'Sans statut' }); setShowStatusMenu(null); }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-gray-50 text-gray-700">Sans statut</button>
+                            <button onClick={() => { handleLeadUpdate(lead.id, { status: 'Sans statut' }); setShowStatusMenu(null); }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-red-50 text-red-700">Sans statut</button>
                             <button onClick={() => { handleLeadUpdate(lead.id, { status: 'À rappeler' }); setShowStatusMenu(null); }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-blue-50 text-blue-700">À rappeler</button>
                             <button onClick={() => {
                               handleLeadUpdate(lead.id, { status: 'RDV pris' });

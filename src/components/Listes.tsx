@@ -20,6 +20,7 @@ interface ListData {
   managers: string[];
   users: string[];
   leads: Lead[];
+  isLive?: boolean;
 }
 
 const mockLeads: Lead[] = [
@@ -37,8 +38,9 @@ const initialMockLists: ListData[] = [
     managers: ['Benjamin Zaoui', 'Daniel Blatche', 'Eytan Cauvy'],
     leads: mockLeads,
     users: [
-      'Johanna Azuelos', 'Kamil Ziri', '+13'
+      'Johanna Azuelos', 'Kamil Ziri', '+2'
     ],
+    isLive: true,
   },
   {
     id: 2,
@@ -172,10 +174,19 @@ export default function Listes({ onNotificationClick, notificationCount }: Liste
                   </div>
 
                   <div className="space-y-3">
-                    <div>
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-light bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 border border-gray-200">
+                    <div className="flex items-center gap-2">
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-light border ${
+                        list.type === 'Importés' ? 'bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 border-blue-200' :
+                        list.type === 'Manuels' ? 'bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 border-gray-200' :
+                        'bg-gradient-to-r from-purple-100 to-purple-50 text-purple-700 border-purple-200'
+                      }`}>
                         {list.type}
                       </span>
+                      {list.isLive && (
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-light bg-gradient-to-r from-green-100 to-green-50 text-green-700 border border-green-200">
+                          Live
+                        </span>
+                      )}
                     </div>
 
                     {(list.managers.length > 0 || list.users.length > 0) && (
@@ -197,7 +208,7 @@ export default function Listes({ onNotificationClick, notificationCount }: Liste
                             const total = list.managers.length + realUsers.length;
                             const displayed = Math.min(3, list.managers.length) + Math.min(realUsers.length, Math.max(0, 3 - list.managers.length));
                             return total > displayed && (
-                              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 border border-gray-200 font-light">
+                              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 border border-blue-200 font-light">
                                 +{total - displayed}
                               </span>
                             );

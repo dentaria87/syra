@@ -330,7 +330,7 @@ export default function Utilisateurs({ onNotificationClick, notificationCount }:
                         ? 'bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 border-blue-200/50'
                         : user.role === 'signataire'
                         ? 'bg-gradient-to-r from-green-100 to-green-50 text-green-700 border-green-200/50'
-                        : 'bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 border-gray-200/50'
+                        : 'bg-gradient-to-r from-purple-100 to-purple-50 text-purple-700 border-purple-200/50'
                     }`}>
                       {user.role === 'admin' ? 'Admin' : user.role === 'manager' ? 'Manager' : user.role === 'gestion' ? 'Gestion' : user.role === 'signataire' ? 'Signataire' : 'Indicateur d\'affaires'}
                     </span>
