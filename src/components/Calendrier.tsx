@@ -511,12 +511,12 @@ export default function Calendrier({ onNotificationClick, notificationCount }: C
               </div>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
-              <button onClick={navigatePrevious} className="w-11 h-11 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-all hover:scale-105 shadow-sm flex-shrink-0">
-                <ChevronLeft className="w-5 h-5 text-gray-600" />
+              <button onClick={navigatePrevious} className="w-11 h-11 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-center transition-all hover:scale-105 flex-shrink-0">
+                <ChevronLeft className="w-5 h-5 text-gray-900 dark:text-gray-300" />
               </button>
               <h2 className="text-lg font-light text-gray-900 capitalize whitespace-nowrap">{getDateRangeLabel()}</h2>
-              <button onClick={navigateNext} className="w-11 h-11 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-all hover:scale-105 shadow-sm flex-shrink-0">
-                <ChevronRight className="w-5 h-5 text-gray-600" />
+              <button onClick={navigateNext} className="w-11 h-11 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-center transition-all hover:scale-105 flex-shrink-0">
+                <ChevronRight className="w-5 h-5 text-gray-900 dark:text-gray-300" />
               </button>
             </div>
             <div className="flex gap-2 items-center flex-shrink-0">

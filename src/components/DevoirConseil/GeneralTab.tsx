@@ -285,13 +285,13 @@ export default function GeneralTab({
         />
       </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+      <div className="bg-blue-50 dark:bg-gray-800/50 border border-blue-200 dark:border-gray-700 rounded-lg p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex-1">
-            <p className="text-gray-800 font-normal text-sm mb-2">
+            <p className="text-gray-800 dark:text-gray-200 font-normal text-sm mb-2">
               Recueil des exigences et des besoins pour des opérations d'assurance vie, de retraite ou de capitalisation
             </p>
-            <p className="text-gray-600 font-light text-xs">
+            <p className="text-gray-600 dark:text-gray-400 font-light text-xs">
               La partie des exigences et besoins vise à identifier les attentes et les besoins s'agissant de la souscription ou de l'opération envisagée (Reversement, arbitrage, ...)
             </p>
           </div>
