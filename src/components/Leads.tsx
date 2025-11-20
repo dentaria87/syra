@@ -898,10 +898,10 @@ export default function Leads({ onNotificationClick, notificationCount, initialF
                             setSelectedLeadForAppointment(lead);
                             setShowAppointmentModalForLead(true);
                           }}
-                          className="inline-flex w-8 h-8 rounded-full bg-blue-50 hover:bg-blue-100 items-center justify-center transition-all hover:scale-105"
+                          className="inline-flex w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/40 border border-blue-100 dark:border-blue-800/50 items-center justify-center transition-all hover:scale-105"
                           title="Ajouter un RDV"
                         >
-                          <CalendarDays className="w-4 h-4 text-blue-600" />
+                          <CalendarDays className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                         </button>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap" onClick={() => handleCellEdit(lead.id, 'first_name', lead.first_name)}>
