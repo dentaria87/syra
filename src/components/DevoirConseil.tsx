@@ -618,10 +618,10 @@ export default function DevoirConseil({ onNotificationClick, notificationCount }
 
                 <button
                   onClick={() => setShowFilters(!showFilters)}
-                  className="px-4 py-2.5 bg-white border border-gray-200 rounded-full text-sm hover:bg-gray-50 transition-all flex items-center gap-2 font-light"
+                  className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-sm font-light text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
                 >
-                  <Filter className="w-4 h-4" />
-                  <span className="hidden sm:inline">Filtres</span>
+                  <Filter className="w-4 h-4 text-gray-900 dark:text-gray-300" />
+                  Filtres
                   {(filterClientName || filterContrat || filterDateDebut || filterDateFin || filterBudgetMin || filterBudgetMax) && (
                     <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
                   )}

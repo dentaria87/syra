@@ -732,10 +732,10 @@ export default function Leads({ onNotificationClick, notificationCount, initialF
 
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="px-3 md:px-4 py-2 bg-white/80 border border-gray-200 rounded-full text-xs md:text-sm hover:bg-white transition-all flex items-center gap-2 font-light flex-shrink-0 whitespace-nowrap"
+              className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-sm font-light text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
             >
-              <Filter className="w-4 h-4" />
-              <span className="hidden sm:inline">Filtres</span>
+              <Filter className="w-4 h-4 text-gray-900 dark:text-gray-300" />
+              Filtres
               {(filterName || filterProduct || filterStatus) && (
                 <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
               )}
