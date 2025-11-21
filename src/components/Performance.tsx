@@ -1,12 +1,8 @@
 import { Bell, Search } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import {
-  getPerformanceStats,
-  getUserPerformances,
   getDailyLeadsData,
   getDailyAppointmentsData,
-  type PerformanceStats,
-  type UserPerformance,
   type DailyChartData,
 } from '../services/performanceService';
 
@@ -21,40 +17,43 @@ export default function Performance({ onNotificationClick, notificationCount }: 
   const [selectedList, setSelectedList] = useState('Toutes les listes');
   const [searchUser, setSearchUser] = useState('');
 
-  const [stats, setStats] = useState<PerformanceStats>({
-    leadsWorked: 0,
-    rdvTaken: 0,
-    sales: 0,
-    rdvRatio: 0,
-    signatureRate: 0,
-    fakeNumbersRate: 0,
-  });
-
-  const [userPerformances, setUserPerformances] = useState<UserPerformance[]>([]);
   const [leadsChartData, setLeadsChartData] = useState<DailyChartData[]>([]);
   const [appointmentsChartData, setAppointmentsChartData] = useState<DailyChartData[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadPerformanceData();
-  }, [startDate, endDate, selectedList, searchUser]);
+  const kpis = [
+    { label: 'Leads travaillés', value: '5530' },
+    { label: 'RDV pris', value: '399' },
+    { label: 'Ventes', value: '11' },
+    { label: 'RDV / total', value: '7.2%' },
+    { label: 'Taux de signature RDV', value: '2.8%' },
+    { label: 'Faux numéros', value: '13.2%' },
+  ];
 
-  const loadPerformanceData = async () => {
+  const userPerformances = [
+    { name: 'Moche Azran (M)', leadsWorked: 5, rdvTaken: 0, signed: 1 },
+    { name: 'Henoc Nsumbu', leadsWorked: 568, rdvTaken: 16, signed: 0 },
+    { name: 'Romain Camesciali', leadsWorked: 171, rdvTaken: 3, signed: 0 },
+    { name: 'Sophie Azuelos', leadsWorked: 11, rdvTaken: 2, signed: 0 },
+    { name: 'David Bouaziz', leadsWorked: 1068, rdvTaken: 42, signed: 0 },
+  ];
+
+  useEffect(() => {
+    loadChartData();
+  }, [startDate, endDate, selectedList]);
+
+  const loadChartData = async () => {
     setLoading(true);
     try {
-      const [statsData, usersData, leadsData, appointmentsData] = await Promise.all([
-        getPerformanceStats(startDate, endDate, selectedList),
-        getUserPerformances(startDate, endDate, selectedList, searchUser),
+      const [leadsData, appointmentsData] = await Promise.all([
         getDailyLeadsData(startDate, endDate, selectedList),
         getDailyAppointmentsData(startDate, endDate, selectedList),
       ]);
 
-      setStats(statsData);
-      setUserPerformances(usersData);
       setLeadsChartData(leadsData);
       setAppointmentsChartData(appointmentsData);
     } catch (error) {
-      console.error('Error loading performance data:', error);
+      console.error('Error loading chart data:', error);
     } finally {
       setLoading(false);
     }
@@ -90,15 +89,6 @@ export default function Performance({ onNotificationClick, notificationCount }: 
     });
     return `M ${points.join(' L ')}`;
   };
-
-  const kpis = [
-    { label: 'Leads travaillés', value: stats.leadsWorked.toString() },
-    { label: 'RDV pris', value: stats.rdvTaken.toString() },
-    { label: 'Ventes', value: stats.sales.toString() },
-    { label: 'RDV / total', value: `${stats.rdvRatio}%` },
-    { label: 'Taux de signature RDV', value: `${stats.signatureRate}%` },
-    { label: 'Faux numéros', value: `${stats.fakeNumbersRate}%` },
-  ];
 
   return (
     <div className="flex-1 overflow-auto">
@@ -167,50 +157,47 @@ export default function Performance({ onNotificationClick, notificationCount }: 
           </div>
         </div>
 
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+          {kpis.map((kpi) => (
+            <div key={kpi.label} className="glass-card p-4 floating-shadow text-center">
+              <p className="text-xs text-gray-600 font-light mb-2">{kpi.label}</p>
+              <p className="text-2xl md:text-3xl font-light text-blue-600">{kpi.value}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="glass-card p-6 floating-shadow mb-6">
+          <h2 className="text-lg font-light text-gray-900 mb-4">Performances utilisateurs</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="px-4 py-3 text-left text-sm font-light text-gray-600">Nom</th>
+                  <th className="px-4 py-3 text-left text-sm font-light text-gray-600">Leads travaillés</th>
+                  <th className="px-4 py-3 text-left text-sm font-light text-gray-600">RDV pris</th>
+                  <th className="px-4 py-3 text-left text-sm font-light text-gray-600">Signé</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {userPerformances.map((user, index) => (
+                  <tr key={index} className="hover:bg-gray-50/50 transition-colors">
+                    <td className="px-4 py-3 text-sm font-light text-gray-900">{user.name}</td>
+                    <td className="px-4 py-3 text-sm font-light text-gray-700">{user.leadsWorked}</td>
+                    <td className="px-4 py-3 text-sm font-light text-gray-700">{user.rdvTaken}</td>
+                    <td className="px-4 py-3 text-sm font-light text-gray-700">{user.signed}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
         {loading ? (
           <div className="glass-card p-8 floating-shadow mb-6 text-center">
-            <p className="text-gray-500 font-light">Chargement des données...</p>
+            <p className="text-gray-500 font-light">Chargement des graphiques...</p>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-              {kpis.map((kpi) => (
-                <div key={kpi.label} className="glass-card p-4 floating-shadow text-center">
-                  <p className="text-xs text-gray-600 font-light mb-2">{kpi.label}</p>
-                  <p className="text-2xl md:text-3xl font-light text-blue-600">{kpi.value}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="glass-card p-6 floating-shadow mb-6">
-              <h2 className="text-lg font-light text-gray-900 mb-4">Performances utilisateurs</h2>
-              <div className="overflow-x-auto">
-                {userPerformances.length === 0 ? (
-                  <p className="text-sm text-gray-500 font-light text-center py-4">Aucune donnée disponible pour cette période</p>
-                ) : (
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-gray-200">
-                        <th className="px-4 py-3 text-left text-sm font-light text-gray-600">Nom</th>
-                        <th className="px-4 py-3 text-left text-sm font-light text-gray-600">Leads travaillés</th>
-                        <th className="px-4 py-3 text-left text-sm font-light text-gray-600">RDV pris</th>
-                        <th className="px-4 py-3 text-left text-sm font-light text-gray-600">Signé</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100">
-                      {userPerformances.map((user) => (
-                        <tr key={user.userId} className="hover:bg-gray-50/50 transition-colors">
-                          <td className="px-4 py-3 text-sm font-light text-gray-900">{user.name}</td>
-                          <td className="px-4 py-3 text-sm font-light text-gray-700">{user.leadsWorked}</td>
-                          <td className="px-4 py-3 text-sm font-light text-gray-700">{user.rdvTaken}</td>
-                          <td className="px-4 py-3 text-sm font-light text-gray-700">{user.signed}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                )}
-              </div>
-            </div>
 
             <div className="glass-card p-4 md:p-6 lg:p-8 floating-shadow mb-6 md:mb-8">
               <div className="space-y-12">
