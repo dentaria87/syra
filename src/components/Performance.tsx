@@ -179,16 +179,27 @@ export default function Performance({ onNotificationClick, notificationCount }: 
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {userPerformances.map((user, index) => (
-                  <tr key={index} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-4 py-3 text-sm font-light text-gray-900">{user.name}</td>
-                    <td className="px-4 py-3 text-sm font-light text-gray-700">{user.leadsWorked}</td>
-                    <td className="px-4 py-3 text-sm font-light text-gray-700">{user.rdvTaken}</td>
-                    <td className="px-4 py-3 text-sm font-light text-gray-700">{user.signed}</td>
-                  </tr>
-                ))}
+                {userPerformances
+                  .filter(user =>
+                    searchUser === '' ||
+                    user.name.toLowerCase().includes(searchUser.toLowerCase())
+                  )
+                  .map((user, index) => (
+                    <tr key={index} className="hover:bg-gray-50/50 transition-colors">
+                      <td className="px-4 py-3 text-sm font-light text-gray-900">{user.name}</td>
+                      <td className="px-4 py-3 text-sm font-light text-gray-700">{user.leadsWorked}</td>
+                      <td className="px-4 py-3 text-sm font-light text-gray-700">{user.rdvTaken}</td>
+                      <td className="px-4 py-3 text-sm font-light text-gray-700">{user.signed}</td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
+            {userPerformances.filter(user =>
+              searchUser === '' ||
+              user.name.toLowerCase().includes(searchUser.toLowerCase())
+            ).length === 0 && (
+              <p className="text-sm text-gray-500 font-light text-center py-4 mt-2">Aucun utilisateur trouvé</p>
+            )}
           </div>
         </div>
 
