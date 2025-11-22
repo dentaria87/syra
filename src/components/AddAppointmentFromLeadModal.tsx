@@ -2,11 +2,11 @@ import { X, Clock, MapPin, Bell, ChevronLeft, ChevronRight, Search, Video } from
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Lead } from '../types';
-import { supabase } from '../lib/supabase';
 
 interface AddAppointmentFromLeadModalProps {
   onClose: () => void;
   lead: Lead;
+  onAppointmentCreate: (leadId: string) => void;
 }
 
 interface UserProfile {
@@ -29,87 +29,42 @@ export default function AddAppointmentFromLeadModal({ onClose, lead }: AddAppoin
   const [appointmentType, setAppointmentType] = useState('consultation');
   const [enableReminder, setEnableReminder] = useState(false);
 
-  const [signataires, setSignataires] = useState<UserProfile[]>([]);
+  const mockSignataires: UserProfile[] = [
+    { id: '1', first_name: 'Marie', last_name: 'Dubois', email: 'marie.dubois@example.com', profile_type: 'Signataire' },
+    { id: '2', first_name: 'Jean', last_name: 'Martin', email: 'jean.martin@example.com', profile_type: 'Signataire' },
+    { id: '3', first_name: 'Sophie', last_name: 'Bernard', email: 'sophie.bernard@example.com', profile_type: 'Signataire' },
+    { id: '4', first_name: 'Lucas', last_name: 'Petit', email: 'lucas.petit@example.com', profile_type: 'Signataire' },
+    { id: '5', first_name: 'Emma', last_name: 'Moreau', email: 'emma.moreau@example.com', profile_type: 'Signataire' },
+  ];
+
+  const [signataires] = useState<UserProfile[]>(mockSignataires);
   const [selectedSignataire, setSelectedSignataire] = useState<string>('');
   const [signataireSearchQuery, setSignataireSearchQuery] = useState<string>('');
   const [showSignataireDropdown, setShowSignataireDropdown] = useState<boolean>(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('');
-  const [occupiedSlots, setOccupiedSlots] = useState<{[key: string]: string[]}>({});
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadSignataires();
-  }, []);
-
-  useEffect(() => {
-    if (selectedSignataire && selectedDate) {
-      loadOccupiedSlots();
-    }
-  }, [selectedSignataire, selectedDate]);
-
-  const loadSignataires = async () => {
-    setLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from('user_profiles')
-        .select('id, first_name, last_name, email, profile_type')
-        .eq('profile_type', 'Signataire');
-
-      if (error) throw error;
-      setSignataires(data || []);
-    } catch (error) {
-      console.error('Error loading signataires:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadOccupiedSlots = async () => {
-    if (!selectedSignataire || !selectedDate) return;
-
-    const dateString = selectedDate.toISOString().split('T')[0];
-
-    try {
-      const { data, error } = await supabase
-        .from('signataire_disponibilites')
-        .select('start_time, end_time')
-        .eq('signataire_id', selectedSignataire)
-        .eq('appointment_date', dateString);
-
-      if (error) throw error;
-
-      const occupied: string[] = [];
-      (data || []).forEach((slot: any) => {
-        occupied.push(slot.start_time.substring(0, 5));
-      });
-
-      setOccupiedSlots({ ...occupiedSlots, [dateString]: occupied });
-    } catch (error) {
-      console.error('Error loading occupied slots:', error);
-    }
-  };
 
   const generateTimeSlots = (): TimeSlot[] => {
     const slots: TimeSlot[] = [];
-    const dateString = selectedDate?.toISOString().split('T')[0] || '';
-    const occupied = occupiedSlots[dateString] || [];
 
     for (let hour = 7; hour <= 21; hour++) {
       for (let minute = 0; minute < 60; minute += 30) {
         const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+        const isOccupied = Math.random() < 0.25;
         slots.push({
           time: timeString,
-          available: !occupied.includes(timeString)
+          available: !isOccupied
         });
       }
     }
 
     const lastSlot = '22:00';
+    const isLastOccupied = Math.random() < 0.25;
     slots.push({
       time: lastSlot,
-      available: !occupied.includes(lastSlot)
+      available: !isLastOccupied
     });
 
     return slots;
@@ -170,7 +125,7 @@ export default function AddAppointmentFromLeadModal({ onClose, lead }: AddAppoin
     setLocation(meetLink);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!selectedSignataire || !selectedDate || !selectedTimeSlot) {
@@ -178,37 +133,8 @@ export default function AddAppointmentFromLeadModal({ onClose, lead }: AddAppoin
       return;
     }
 
-    try {
-      const { data: currentLead, error: leadError } = await supabase
-        .from('leads')
-        .select('rdv_count')
-        .eq('id', lead.id)
-        .maybeSingle();
-
-      if (leadError) throw leadError;
-
-      const currentRdvCount = currentLead?.rdv_count || 0;
-
-      if (currentRdvCount >= 2) {
-        alert('Ce lead a déjà atteint le maximum de 2 RDV pris.');
-        return;
-      }
-
-      const { error: updateError } = await supabase
-        .from('leads')
-        .update({
-          rdv_count: currentRdvCount + 1,
-          status: 'RDV pris'
-        })
-        .eq('id', lead.id);
-
-      if (updateError) throw updateError;
-
-      onClose();
-    } catch (error) {
-      console.error('Error creating appointment:', error);
-      alert('Erreur lors de la création du rendez-vous');
-    }
+    onAppointmentCreate(lead.id);
+    onClose();
   };
 
   const days = getDaysInMonth(currentMonth);
@@ -258,10 +184,7 @@ export default function AddAppointmentFromLeadModal({ onClose, lead }: AddAppoin
 
             <div>
               <label className="block text-sm font-light text-gray-700 dark:text-gray-300 mb-2">Signataire</label>
-              {loading ? (
-                <p className="text-sm text-gray-500">Chargement des signataires...</p>
-              ) : (
-                <div className="relative">
+              <div className="relative">
                   <div className="relative">
                     <Search className="w-4 h-4 text-gray-400 dark:text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
                     <input
@@ -336,7 +259,6 @@ export default function AddAppointmentFromLeadModal({ onClose, lead }: AddAppoin
                     </div>
                   )}
                 </div>
-              )}
             </div>
 
             {selectedSignataire && (

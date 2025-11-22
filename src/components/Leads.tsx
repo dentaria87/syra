@@ -352,6 +352,21 @@ function LeadCard({ lead, onUpdate, showOwner, canViewAllStatuses }: { lead: Lea
   const [commentText, setCommentText] = useState('');
   const [localLead, setLocalLead] = useState(lead);
 
+  const handleAppointmentCreate = (leadId: string) => {
+    const currentRdvCount = localLead.rdv_count || 0;
+    if (currentRdvCount >= 2) {
+      alert('Ce lead a déjà atteint le maximum de 2 RDV pris.');
+      return;
+    }
+
+    const updates: Partial<Lead> = {
+      status: 'RDV pris',
+      rdv_count: currentRdvCount + 1
+    };
+
+    setLocalLead({ ...localLead, ...updates });
+    onUpdate(leadId, updates);
+  };
 
   const handleStatusChange = (status: string) => {
     const updates: Partial<Lead> = { status };
@@ -602,7 +617,7 @@ function LeadCard({ lead, onUpdate, showOwner, canViewAllStatuses }: { lead: Lea
 
       {showReminderModal && <ReminderModal lead={localLead} onClose={() => setShowReminderModal(false)} />}
       {showCalendarModal && <CalendarSyncModal onClose={() => setShowCalendarModal(false)} />}
-      {showAppointmentModal && <AddAppointmentFromLeadModal lead={localLead} onClose={() => setShowAppointmentModal(false)} />}
+      {showAppointmentModal && <AddAppointmentFromLeadModal lead={localLead} onClose={() => setShowAppointmentModal(false)} onAppointmentCreate={handleAppointmentCreate} />}
       {showCommentsModal && (
         <LeadCommentsModal
           leadId={lead.id}
@@ -679,6 +694,26 @@ export default function Leads({ onNotificationClick, notificationCount, initialF
     }
 
     setLeads(leads.map(lead => lead.id === leadId ? { ...lead, ...updatedLeadData } : lead));
+  };
+
+  const handleAppointmentCreateForTable = (leadId: string) => {
+    const lead = leads.find(l => l.id === leadId);
+    if (!lead) return;
+
+    const currentRdvCount = lead.rdv_count || 0;
+    if (currentRdvCount >= 2) {
+      alert('Ce lead a déjà atteint le maximum de 2 RDV pris.');
+      return;
+    }
+
+    const updates: Partial<Lead> = {
+      status: 'RDV pris',
+      rdv_count: currentRdvCount + 1,
+      status_updated_at: new Date().toISOString(),
+      status_updated_by: 'Marie Dubois'
+    };
+
+    setLeads(leads.map(l => l.id === leadId ? { ...l, ...updates } : l));
   };
 
   const filteredLeads = leads.filter(lead => {
@@ -1179,6 +1214,7 @@ export default function Leads({ onNotificationClick, notificationCount, initialF
             setShowAppointmentModalForLead(false);
             setSelectedLeadForAppointment(null);
           }}
+          onAppointmentCreate={handleAppointmentCreateForTable}
         />
       )}
     </div>
