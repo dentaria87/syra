@@ -326,7 +326,7 @@ export default function AddAppointmentFromLeadModal({ onClose, lead }: AddAppoin
               <>
                 <div>
                   <label className="block text-sm font-light text-gray-700 dark:text-gray-300 mb-3">Sélectionner une date et un créneau</label>
-                  <div className="flex gap-4 items-stretch">
+                  <div className="flex gap-4 items-start">
                     {/* Calendrier - 60% */}
                     <div className="flex-[6] bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/50 rounded-2xl p-3">
                       <div className="flex items-center justify-between mb-3">
@@ -377,7 +377,7 @@ export default function AddAppointmentFromLeadModal({ onClose, lead }: AddAppoin
                     </div>
 
                     {/* Créneaux disponibles - 40% */}
-                    <div className="flex-[4] bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/50 rounded-2xl p-3 flex flex-col">
+                    <div className="flex-[4] bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/50 rounded-2xl p-3 flex flex-col h-[320px]">
                       {selectedDate ? (
                         <>
                           <h4 className="text-xs font-light text-gray-900 dark:text-gray-100 mb-2 flex-shrink-0">
@@ -409,7 +409,7 @@ export default function AddAppointmentFromLeadModal({ onClose, lead }: AddAppoin
                           )}
                         </>
                       ) : (
-                        <div className="flex items-center justify-center min-h-[200px]">
+                        <div className="flex items-center justify-center h-full">
                           <p className="text-xs text-gray-500 dark:text-gray-400 font-light text-center">
                             Sélectionnez une date
                           </p>
