@@ -326,7 +326,7 @@ export default function AddAppointmentFromLeadModal({ onClose, lead }: AddAppoin
               <>
                 <div>
                   <label className="block text-sm font-light text-gray-700 dark:text-gray-300 mb-3">Sélectionner une date et un créneau</label>
-                  <div className="flex gap-4">
+                  <div className="flex gap-4 items-start">
                     {/* Calendrier - 60% */}
                     <div className="flex-[6] bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/50 rounded-2xl p-3">
                       <div className="flex items-center justify-between mb-3">
@@ -377,20 +377,20 @@ export default function AddAppointmentFromLeadModal({ onClose, lead }: AddAppoin
                     </div>
 
                     {/* Créneaux disponibles - 40% */}
-                    <div className="flex-[4] bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/50 rounded-2xl p-3 flex flex-col min-h-0">
+                    <div className="flex-[4] bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/50 rounded-2xl p-3 flex flex-col h-[260px]">
                       {selectedDate ? (
                         <>
                           <h4 className="text-xs font-light text-gray-900 dark:text-gray-100 mb-2 flex-shrink-0">
                             Créneaux - {selectedDate.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })}
                           </h4>
-                          <div className="flex-1 overflow-y-auto space-y-1 pr-1 min-h-0">
+                          <div className="flex-1 overflow-y-auto space-y-1 pr-1">
                             {timeSlots.map((slot) => (
                               <button
                                 key={slot.time}
                                 type="button"
                                 onClick={() => slot.available && handleTimeSlotClick(slot.time)}
                                 disabled={!slot.available}
-                                className={`w-full px-3 py-1.5 rounded-lg text-xs font-light transition-all flex-shrink-0 ${
+                                className={`w-full px-3 py-1.5 rounded-lg text-xs font-light transition-all ${
                                   !slot.available
                                     ? 'bg-gray-100 dark:bg-gray-700/50 text-gray-400 dark:text-gray-500 cursor-not-allowed'
                                     : selectedTimeSlot === slot.time
