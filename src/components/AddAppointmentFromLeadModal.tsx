@@ -178,6 +178,21 @@ export default function AddAppointmentFromLeadModal({ onClose, lead }: AddAppoin
     const endTime = calculateEndTime(selectedTimeSlot);
 
     try {
+      const { data: currentLead, error: leadError } = await supabase
+        .from('leads')
+        .select('rdv_count')
+        .eq('id', lead.id)
+        .maybeSingle();
+
+      if (leadError) throw leadError;
+
+      const currentRdvCount = currentLead?.rdv_count || 0;
+
+      if (currentRdvCount >= 2) {
+        alert('Ce lead a déjà atteint le maximum de 2 RDV pris.');
+        return;
+      }
+
       const { error: availabilityError } = await supabase
         .from('signataire_disponibilites')
         .insert({
@@ -189,6 +204,16 @@ export default function AddAppointmentFromLeadModal({ onClose, lead }: AddAppoin
         });
 
       if (availabilityError) throw availabilityError;
+
+      const { error: updateError } = await supabase
+        .from('leads')
+        .update({
+          rdv_count: currentRdvCount + 1,
+          status: 'RDV pris'
+        })
+        .eq('id', lead.id);
+
+      if (updateError) throw updateError;
 
       setShowConfirmation(true);
       setTimeout(() => {
